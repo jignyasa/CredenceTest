@@ -1,15 +1,18 @@
-package com.ma.credencetest
+package com.ma.credencetest.helper
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.ma.credencetest.BuildConfig
 
 class SessionHelper(private val mContext: Context) {
-    private val SHARED_PREFERENCE = BuildConfig.APPLICATION_ID
+    private val SHARED_PREFERENCE =
+        BuildConfig.APPLICATION_ID
     private val preferences: SharedPreferences
     val editor: SharedPreferences.Editor
 
     companion object {
         const val IS_LOGIN = "isLogin"
+        const val USER_ID = "userId"
     }
 
     init {
@@ -22,5 +25,10 @@ class SessionHelper(private val mContext: Context) {
         get() = preferences.getBoolean(IS_LOGIN, false)
         set(value) {
             editor.putBoolean(IS_LOGIN, value).apply()
+        }
+    var userId: String
+        get() = preferences.getString(USER_ID,"0").toString()
+        set(value) {
+            editor.putString(USER_ID, value).apply()
         }
 }

@@ -1,4 +1,4 @@
-package com.ma.credencetest
+package com.ma.credencetest.helper
 
 import java.text.SimpleDateFormat
 import java.util.*

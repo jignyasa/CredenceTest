@@ -11,27 +11,31 @@ import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.JsonObject
-import com.ma.credencetest.DateUtility
 import com.ma.credencetest.R
-import com.ma.credencetest.SessionHelper
 import com.ma.credencetest.activity.login.Login
+import com.ma.credencetest.helper.DateUtility
 import com.ma.credencetest.helper.NetworkHelper
+import com.ma.credencetest.helper.SessionHelper
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_registration.*
-import retrofit2.Retrofit
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.util.*
 import java.util.regex.Pattern
 
+
 class Registration : AppCompatActivity() ,View.OnClickListener{
     private var cal=Calendar.getInstance()
+    private lateinit var helper:SessionHelper
     private lateinit var datePickerDialog:DatePickerDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-        registerUser()
+        helper=SessionHelper(this)
         initDatePicker()
         edtBirthdate.setOnClickListener (this)
         btnRegistration.setOnClickListener (this)
@@ -57,8 +61,8 @@ class Registration : AppCompatActivity() ,View.OnClickListener{
                 edtPassword.text.toString(),
                 edtFirstName.text.toString(),
                 edtLastName.text.toString(),
-                edtBirthdate.text.toString()).
-                    subscribeOn(Schedulers.io())
+                edtBirthdate.text.toString())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object:Observer<JsonObject>{
                     override fun onComplete() {
@@ -70,8 +74,10 @@ class Registration : AppCompatActivity() ,View.OnClickListener{
                     }
 
                     override fun onNext(t: JsonObject) {
-                        val success=t.get("success") as Int
+                        Log.e("data",t.toString())
+                        val success=t.get("success").asInt
                         if(success==1) {
+                            helper.userId="1"
                             makeToast(this@Registration,"Register Successfully.")
                             finish()
                         }
@@ -96,7 +102,7 @@ class Registration : AppCompatActivity() ,View.OnClickListener{
         } else if (edtLastName.text.toString().isEmpty()) {
              isValid=false
             makeToast(this, "please enter proper last name")
-        } else if (edtEmail.text.toString().isEmpty() || !pattern.matcher(edtEmail.text.toString()).matches()) {
+        } else if (edtEmail.text.toString().isEmpty() || !pattern.matcher(edtEmail.text?.trim().toString()).matches()) {
              isValid=false
             makeToast(this, "please enter proper email")
         } else if (edtBirthdate.text.toString().isEmpty()) {

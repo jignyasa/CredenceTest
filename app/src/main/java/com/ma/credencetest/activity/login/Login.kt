@@ -10,9 +10,11 @@ import android.view.View
 import android.widget.Toast
 import com.google.gson.JsonObject
 import com.ma.credencetest.R
-import com.ma.credencetest.SessionHelper
+import com.ma.credencetest.activity.UserList
+import com.ma.credencetest.helper.SessionHelper
 import com.ma.credencetest.activity.registration.Registration
 import com.ma.credencetest.helper.NetworkHelper
+import com.ma.credencetest.model.ListItem
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -31,10 +33,10 @@ class Login : AppCompatActivity(),View.OnClickListener{
     private fun validation():Boolean {
         val isValid: Boolean
         val pattern: Pattern = Patterns.EMAIL_ADDRESS
-         if (edtEmail.text.toString().isEmpty() || !pattern.matcher(edtEmail.text.toString()).matches()) {
+         if (username.text.toString().isEmpty() || !pattern.matcher(username.text?.trim().toString()).matches()) {
             isValid=false
             makeToast(this, "please enter proper email")
-        } else if (edtPassword.text.toString().isEmpty()) {
+        } else if (password.text.toString().isEmpty()) {
              isValid = false
              makeToast(this, "please enter proper password")
          }
@@ -63,12 +65,11 @@ class Login : AppCompatActivity(),View.OnClickListener{
         if(NetworkHelper.isInternetAvailable(this))
         {
             com.ma.credencetest.remote.Retrofit.getRetrofit().doLogin(
-                edtEmail.text.toString(),
-                edtPassword.text.toString()).subscribeOn(Schedulers.io())
+               username.text.toString(),
+                password.text.toString()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object: Observer<JsonObject> {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -76,10 +77,14 @@ class Login : AppCompatActivity(),View.OnClickListener{
                     }
 
                     override fun onNext(t: JsonObject) {
-                        val success=t.get("success") as Int
+                        Log.e("data",t.toString())
+                        val success=t.get("success").asInt
                         if(success==1) {
-                            val helper = SessionHelper(this@Login)
+                            val helper =
+                                SessionHelper(this@Login)
                             helper.isLogin = true
+                            helper.userId=t.get("user_id").asString
+                            startActivity(Intent(this@Login,UserList::class.java))
                         }
                     }
 

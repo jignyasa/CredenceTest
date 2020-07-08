@@ -22,4 +22,6 @@
     <string name="select_your_birthdate">Select your birthdate</string>
     <string name="enter_your_email">Enter your email</string>
     <string name="enter_your_password">Enter your password</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

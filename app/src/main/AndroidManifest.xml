@@ -10,10 +10,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.registration.Registration">
-        </activity>
+        <activity android:name=".activity.UserList"></activity>
+        <activity android:name=".activity.registration.Registration"></activity>
         <activity android:name=".activity.login.Login" />
         <activity android:name=".activity.Splash">
             <intent-filter>
@@ -22,7 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" >
+        </activity>
     </application>
 
 </manifest>

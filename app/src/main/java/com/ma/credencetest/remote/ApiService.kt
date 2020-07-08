@@ -7,10 +7,14 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 interface ApiService {
-    @POST
+    @POST("login.php")
     @FormUrlEncoded
     fun doLogin(@Field("user_email") userName:String,
                  @Field("user_password") password:String) : Observable<JsonObject>
+
+    @POST("userList.php")
+    @FormUrlEncoded
+    fun getUserData(@Field("user_id") userId:String) : Observable<JsonObject>
 
     @POST("registrationWithProfilePictureWith_File.php")
     @FormUrlEncoded
@@ -19,6 +23,6 @@ interface ApiService {
                        @Field("user_firstname") userFirstName:String,
                        @Field("user_lastname") userLastName:String,
                        @Field("user_birthdate") userBirthDate:String,
-                       @Field("user_profile_picture_data") userPhoto:String="") : Observable<JsonObject>
+                       @Field("user_profile_picture_data") userPhoto:String="jigu") : Observable<JsonObject>
 
 }
