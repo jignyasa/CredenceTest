@@ -85,6 +85,7 @@ class Login : AppCompatActivity(),View.OnClickListener{
                             helper.isLogin = true
                             helper.userId=t.get("user_id").asString
                             startActivity(Intent(this@Login,UserList::class.java))
+                            finish()
                         }
                     }
 
